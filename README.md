@@ -6,13 +6,14 @@ Before running the codes, install the R-package **psivcm** which can be found in
 ## Simulation Settings
 The simulation settings considered in the paper are as follows:
 
-* Setting 1 (`model = 1`): the main study.
+* Setting 1 (`model = 1`): the simulation study (in Section 3).
 
-* Setting 2 (`model = 2`): the additional simulation study concerning a main effect model.
+* Setting 2 (`model = 2`): the additional simulation study (in Section S3.1) concerning a main effect model.
 
-* Setting 3 (`model = 3`): the additional simulation study concerning a model with non-linear main effects.
+* Setting 3 (`model = 3`): the additional simulation study (in Section S3.2) concerning a model with non-linear main effects.
 
-* Setting 4 (`model = 4`): the additional simulation study concerning an interaction model.
+* Setting 4 (`model = 4`): the additional simulation study concerning a pairwise interaction model.
+
 
 ## Simulation Data Sets
 The simulation data sets used in the paper are stored in the directory `Simulation/SimulationData`. The zip file in the directory contains the file `Simulation-beta0.csv`, 303 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 909 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
