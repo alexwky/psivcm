@@ -13,16 +13,18 @@ weight <- FALSE
 #-------------------------------------------------------------------------------
 
 # Generate multiple initial values of beta for the NSCLC analysis
-initbeta <- matrix(nrow = 50, ncol = 5)
-for (seed in 1:50) {
-    set.seed(seed)
-    beta0 <- rnorm(5)
-    beta0 <- beta0 / sqrt(sum(beta0 ^ 2))
-    initbeta[seed, ] <- beta0
+if(FALSE){
+    initbeta <- matrix(nrow = 50, ncol = 5)
+    for (seed in 1:50) {
+        set.seed(seed)
+        beta0 <- rnorm(5)
+        beta0 <- beta0 / sqrt(sum(beta0 ^ 2))
+        initbeta[seed, ] <- beta0
+    }
+    write.table(initbeta, 
+                "./RealDataAnalysis/RealDataAnalysisData/RealData-NSCLC-beta0.csv", 
+                row.names = FALSE, col.names = FALSE, sep = ",")    
 }
-write.table(initbeta, 
-            file = "./RealDataAnalysis/RealDataAnalysisData/RealData-NSCLC-beta0.csv", 
-            row.names = FALSE, col.names = FALSE, sep = ",")
 
 # Import data
 clinical <- as.matrix(read.csv(
@@ -115,16 +117,18 @@ for (initbeta in 1:50) {
 #-------------------------------------------------------------------------------
 
 # Generate multiple initial values of beta for the LGG analysis
-initbeta <- matrix(nrow = 50, ncol = 7)
-for (seed in 1:50) {
-    set.seed(seed)
-    beta0 <- rnorm(7)
-    beta0 <- beta0 / sqrt(sum(beta0 ^ 2))
-    initbeta[seed, ] <- beta0
+if(FALSE){
+    initbeta <- matrix(nrow = 50, ncol = 7)
+    for (seed in 1:50) {
+        set.seed(seed)
+        beta0 <- rnorm(7)
+        beta0 <- beta0 / sqrt(sum(beta0 ^ 2))
+        initbeta[seed, ] <- beta0
+    }
+    write.table(initbeta, 
+                "./RealDataAnalysis/RealDataAnalysisData/RealData-LGG-beta0.csv", 
+                row.names = FALSE, col.names = FALSE, sep = ",")
 }
-write.table(initbeta, 
-            file = "./RealDataAnalysis/RealDataAnalysisData/RealData-LGG-beta0.csv", 
-            row.names = FALSE, col.names = FALSE, sep = ",")
 
 # Import data
 Y <- as.matrix(read.csv("./RealDataAnalysis/RealDataAnalysisData/UCSC_LGG_OS_survival.csv"))
