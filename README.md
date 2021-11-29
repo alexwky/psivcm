@@ -4,7 +4,7 @@ This directory contains the codes to perform all the analyses and reproduce all 
 Before running the codes, install the R-package **psivcm** which can be found in the home directory. The programs also require the R-packages  **grpreg**, **splines2**, **survival**, and **SurvC1**. A list of configurations is shown at the end of this document.
 
 ## Simulation Settings
-We introduce the simulation settings considered in the paper:
+The simulation settings considered in the paper are as follows:
 
 * Setting 1 (`model = 1`): the main study.
 
@@ -15,7 +15,7 @@ We introduce the simulation settings considered in the paper:
 * Setting 4 (`model = 4`): the additional simulation study concerning an interaction model.
 
 ## Simulation Data Sets
-The simulation data sets used in the paper are stored in the directory `Simulation/SimulationData`. The zip files in the directory contain the file `Simulation-beta0.csv`, 303 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 909 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
+The simulation data sets used in the paper are stored in the directory `Simulation/SimulationData`. The zip file in the directory contains the file `Simulation-beta0.csv`, 303 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 909 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
 
 * The file `Simulation-beta0.csv` stores the initial values of single-index parameter that are used for all simulation replicates. Each row in a file contains a set of initial values.
 
@@ -23,7 +23,7 @@ The simulation data sets used in the paper are stored in the directory `Simulati
 
 * Each of the 909 files contains the responses for other simulation settings (setting 2 to 4). Each row in a file contains data for a subject. The first element on each row is the continuous outcome, the second element and the third element are the right-censored outcome corresponding to the observed time and the event indicator (that equals 1 or 0 if the event is observed or right-censored), respectively. 
 
-Users can instead simulate the random data by running the program `SimulateData.R` in the directory `Simulation`. It will generate the initial values of single-index parameter and 101 simulation data sets (100 training data sets and a validation data set) for each simulation setting to the directory `Simulation/SimulationData`.
+To reproduce the analyses, download `SimulationData.zip` and copy the files to the directory `Simulation/SimulationData`. Users can instead simulate the random data by running the program `SimulateData.R` in the directory `Simulation`. It will generate the initial values of single-index parameter and 101 simulation data sets (100 training data sets and a validation data set) for each simulation setting to the directory `Simulation/SimulationData`.
 
 
 ## Simulation Studies
@@ -35,7 +35,9 @@ To reproduce all the analyses in the paper, users should follow the comments sta
 
 ## Analysis of TCGA data
 
-We provided two real data examples for the application of the proposed method. The raw data downloaded from [UCSC Xena data hubs](https://xena.ucsc.edu) can be found in the directory `RealDataAnalysis/RealDataAnalysisData`. Run the program `DataProcessing.R` to extract relevant data for the analyses. The processed data will be written in the same directory. Run the program `RealDataAnalysis.R` in the directory `RealDataAnalysis`. This program generate the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter to the directory `RealDataAnalysis/RealDataAnalysisData`. Each row in a file contains a set of initial values of single-index parameter. The program then performs analyses on the NSCLC and LGG data sets. For each analysis, the program generates an output files in the directory `RealDataAnalysis/RealDataAnalysisResults` and each row in the output file contains the estimated regression parameters under each initial value of the single-index parameter.
+We provided two real data examples for the application of the proposed method. The raw data downloaded from [UCSC Xena data hubs](https://xena.ucsc.edu) can be found in the directory `RealDataAnalysis/RealDataAnalysisData`. The zip file `RealDataAnalysis-data.zip` contains the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter for each analysis. Each row in a file contains a set of initial values. (Users can also generate initial values of the single-index parameter by switching `FALSE` in lines 16 and 120 of the program `RealDataAnalysis.R` into `TRUE`. The program will generate the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter to the directory `RealDataAnalysis/RealDataAnalysisData`.)  The zip file `RealDataAnalysis-data.zip` contains all data files required for the real data analyses.
+
+Download `RealDataAnalysis-beta0.zip` and `RealDataAnalysis-data.zip`, and copy the files to `RealDataAnalysis/RealDataAnalysisData`. Run the program `DataProcessing.R` to extract relevant data for the analyses. The processed data will be written in the same directory. Run the program `RealDataAnalysis.R` in the directory `RealDataAnalysis`. This program performs analyses on the NSCLC and LGG data sets. For each analysis, the program generates an output files in the directory `RealDataAnalysis/RealDataAnalysisResults` and each row in the output file contains the estimated regression parameters under each initial value of the single-index parameter.
 
 
 ## Generation of Figures
