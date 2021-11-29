@@ -1,7 +1,7 @@
 ## Introduction
 This directory contains the codes to perform all the analyses and reproduce all the figures and tables presented in the paper: Ng HM, Jiang BY, Wong KY. Penalized estimation of a class of single-index varying-coefficient models for integrative genomic analysis. 2021.
 
-Before running the codes, install the R-package **psivcm** which can be found in the home directory. The programs also require the R-packages  **grpreg**, **splines2**, **survival**, and **SurvC1**. A list of configurations is shown at the end of this document.
+Before running the codes, install the R-package **psivcm** which can be found in the home directory. The programs also require the R-packages  **grpreg**, **splines2**, **survival**, and **SurvC1**.
 
 ## Simulation Settings
 The simulation settings considered in the paper are as follows:
