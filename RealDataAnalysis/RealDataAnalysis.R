@@ -13,7 +13,7 @@ weight <- FALSE
 #-------------------------------------------------------------------------------
 
 # Generate multiple initial values of beta for the NSCLC analysis
-if(FALSE){
+if(FALSE) {
     initbeta <- matrix(nrow = 50, ncol = 5)
     for (seed in 1:50) {
         set.seed(seed)
@@ -117,7 +117,7 @@ for (initbeta in 1:50) {
 #-------------------------------------------------------------------------------
 
 # Generate multiple initial values of beta for the LGG analysis
-if(FALSE){
+if(FALSE) {
     initbeta <- matrix(nrow = 50, ncol = 7)
     for (seed in 1:50) {
         set.seed(seed)
