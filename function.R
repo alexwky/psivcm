@@ -69,23 +69,27 @@ analysis <- function(Y, X, U, Z, nknot, degree, family, nlambda = 20, w, beta0,
     data.temp <- cbind(X[, rep(1:p, each = d)] * B[, rep(1:d, p)], B)
     if (family == "cox") {
         for (lam1 in 1:nlambda) {
-            lambda2[[lam1]] <- setup.grlambda(X = data.temp, Y = Y, family = family,
-                                              group = c(rep(1:p, each = d), rep(0, d)),
-                                              nlambda = nlambda, offset = cbind(X, Z) %*% 
-                                                  fit.temp$beta[, lam1], 
-                                              lambda.min.ratio = lambda2.min.ratio, 
-                                              penalty.factor = c(w, 0))   
+            lambda2[[lam1]] <- 
+                setup.grlambda(X = data.temp, Y = Y, family = family,
+                               group = c(rep(1:p, each = d), rep(0, d)),
+                               nlambda = nlambda, offset = cbind(X, Z) %*% 
+                                   fit.temp$beta[, ifelse(lam1 > ncol(fit.temp$beta), 
+                                                          ncol(fit.temp$beta), lam1)], 
+                               lambda.min.ratio = lambda2.min.ratio, 
+                               penalty.factor = c(w, 0))   
         }
     }
     
     if (family == "gaussian") {
         for (lam1 in 1:nlambda) {
-            lambda2[[lam1]] <- setup.grlambda(X = data.temp, Y = Y, family = family,
-                                              group = c(rep(1:p, each = d), rep(0, d)), 
-                                              nlambda = nlambda, offset = cbind(X, Z) %*% 
-                                                  fit.temp$beta[-1, lam1], 
-                                              lambda.min.ratio = lambda2.min.ratio, 
-                                              penalty.factor = c(w, 0))   
+            lambda2[[lam1]] <- 
+                setup.grlambda(X = data.temp, Y = Y, family = family,
+                               group = c(rep(1:p, each = d), rep(0, d)), 
+                               nlambda = nlambda, offset = cbind(X, Z) %*% 
+                                   fit.temp$beta[-1, ifelse(lam1 > ncol(fit.temp$beta), 
+                                                            ncol(fit.temp$beta), lam1)], 
+                               lambda.min.ratio = lambda2.min.ratio, 
+                               penalty.factor = c(w, 0))   
         }
     }
     
