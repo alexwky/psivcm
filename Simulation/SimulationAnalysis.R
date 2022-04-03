@@ -9,7 +9,7 @@ method["MAIN"] <- TRUE # FALSE for model 3
 method["INT"] <- TRUE # FALSE for model 3
 
 # --------------------------------- User inputs --------------------------------
-p <- 20 # number of covariates in X: 20, 50, and 100
+p <- 20 # number of covariates in X: 20, 50, 100, and 300
 family <- "gaussian" # response type: "gaussian" and "cox"
 model <- 1 # simulation setting: 1, 2, 3, and 4
 nonlinear.main <- FALSE # logical argument for fitting nonlinear main effect
@@ -34,18 +34,7 @@ psi <- c(0.2, -0.2, 0.5, -0.5)
     g8 <- function(z) 0.3 + 0 * z
     g9 <- function(z) 0.4 + 0 * z
     g10 <- function(z) 0.5 + 0 * z
-    if (model == 1 | model == 3) {
-        g11 <- function(z) 0.25 * z + 0 * z ^ 2
-        g12 <- function(z) -0.2 - 0.3 * z + 0 * z ^ 2
-        g13 <- function(z) -0.25 * z ^ 2
-        g14 <- function(z) -0.2 + 0.25 * z ^ 2
-        g15 <- function(z) 0.4 * z - 0.1 * z ^ 2
-        g16 <- function(z) -0.3 + 0.3 * z + 0.2 * z ^ 2
-        g17 <- function(z) 0.1 * z ^ 3
-        g18 <- function(z) -0.2 - 0.15 * z ^ 3
-        g19 <- function(z) 1 / (1 + exp(- z * 5))
-        g20 <- function(z) 1 / (1 + exp(z * 4)) - 0.3
-    } else if (model == 2) {
+    if (model == 2) {
         g11 <- function(z) -0.5 + 0 * z
         g12 <- function(z) -0.4 + 0 * z
         g13 <- function(z) -0.3 + 0 * z
@@ -56,6 +45,17 @@ psi <- c(0.2, -0.2, 0.5, -0.5)
         g18 <- function(z) 0.3 + 0 * z
         g19 <- function(z) 0.4 + 0 * z
         g20 <- function(z) 0.5 + 0 * z
+    } else {
+        g11 <- function(z) 0.25 * z + 0 * z ^ 2
+        g12 <- function(z) -0.2 - 0.3 * z + 0 * z ^ 2
+        g13 <- function(z) -0.25 * z ^ 2
+        g14 <- function(z) -0.2 + 0.25 * z ^ 2
+        g15 <- function(z) 0.4 * z - 0.1 * z ^ 2
+        g16 <- function(z) -0.3 + 0.3 * z + 0.2 * z ^ 2
+        g17 <- function(z) 0.1 * z ^ 3
+        g18 <- function(z) -0.2 - 0.15 * z ^ 3
+        g19 <- function(z) 1 / (1 + exp(- z * 5))
+        g20 <- function(z) 1 / (1 + exp(z * 4)) - 0.3
     }
 }
 nknot <- 3
@@ -112,7 +112,7 @@ for (seed in 1:100) {
                   model, "-p", p, "-", seed, ".csv", sep = "")))
         if (family == "cox") Y <- Surv(response.train[, "time"], response.train[, "status"])
         if (family == "gaussian") Y <- response.train[, "Y"]
-        if (model == 2 | model == 4) {
+        if (model == 2) {
             Z <- matrix(nrow = n, ncol = 0)
             r <- ncol(Z)
         }
@@ -139,28 +139,20 @@ for (seed in 1:100) {
             Z.val <- Z.val[, -ncol(Z.val)]
         } else Z.val <- U.val[, -q]
     } else Z.val <- U.val[, -q]
-    if (model == 4) {
-        beta <- rep(0, p * (q + 1) + q)
-        beta[1:5] <- c(0.6, 0.4, -0.4, 0.2, 0.8)
-        beta[6:10] <- c(0.6, 0.4, -0.4, 0.2, 0.8)
-        beta[tail(1:length(beta), 4)] <- c(0.8, -0.8, 0.4, 1.6)
-        eta <- as.vector(cbind(X.val[, rep(1:p, each = q + 1)] * 
-                                   matrix(cbind(rep(1, 5000), U.val), nrow = 5000,
-                                          ncol = p * (q + 1)), U.val) %*% beta)
-    } else {
-        g.val <- matrix(0, nrow = 5000, ncol = p)
-        g.val[, 1:20] <- sapply(1:20, function(i) 
-            do.call(paste("g", i, sep = ""), list(U.val %*% beta)))
-        g.val <- cbind(g.val, matrix(psi, nrow = 5000, ncol = q, byrow = TRUE))
-        if (model == 3) {
-            U.val.trans <- U.val
-            U.val.trans[, 1] <- 0.5 * U.val[, 1] ^ 2 + 0.8 * U.val[, 1]
-            U.val.trans[, 2] <- 0.5 * U.val[, 2] ^ 2 + 0.8 * U.val[, 2]
-            U.val.trans[, 3] <- -0.3 * U.val[, 3] ^ 2 + 0.8 * U.val[, 3]
-            U.val.trans[, 4] <- -0.3 * U.val[, 4] ^ 2 + 0.8 * U.val[, 4]
-            eta <- rowSums(g.val * cbind(X.val, U.val.trans))
-        } else eta <- rowSums(g.val * cbind(X.val, U.val))
-    }
+    
+    g.val <- matrix(0, nrow = 5000, ncol = p)
+    g.val[, 1:20] <- sapply(1:20, function(i) 
+        do.call(paste("g", i, sep = ""), list(U.val %*% beta)))
+    g.val <- cbind(g.val, matrix(psi, nrow = 5000, ncol = q, byrow = TRUE))
+    if (model == 3) {
+        U.val.trans <- U.val
+        U.val.trans[, 1] <- 0.5 * U.val[, 1] ^ 2 + 0.8 * U.val[, 1]
+        U.val.trans[, 2] <- 0.5 * U.val[, 2] ^ 2 + 0.8 * U.val[, 2]
+        U.val.trans[, 3] <- -0.3 * U.val[, 3] ^ 2 + 0.8 * U.val[, 3]
+        U.val.trans[, 4] <- -0.3 * U.val[, 4] ^ 2 + 0.8 * U.val[, 4]
+        eta <- rowSums(g.val * cbind(X.val, U.val.trans))
+    } else eta <- rowSums(g.val * cbind(X.val, U.val))
+    
     if (model == 1) {
         if (family == "cox") Y.val <- Surv(data.val[, "time"], data.val[, "status"])
         if (family == "gaussian") Y.val <- data.val[, "Y"]
@@ -170,7 +162,7 @@ for (seed in 1:100) {
                   model, "-p", p, "-", 0, ".csv", sep = "")))
         if (family == "cox") Y.val <- Surv(response.val[, "time"], response.val[, "status"])
         if (family == "gaussian") Y.val <- response.val[, "Y"]
-        if (model == 2 | model == 4) Z.val <- matrix(nrow = 5000, ncol = 0)
+        if (model == 2) Z.val <- matrix(nrow = 5000, ncol = 0)
     }
     
     # Proposed method
@@ -212,30 +204,21 @@ for (seed in 1:100) {
         sivcm.coef <- res$coef[[lambda.loc[1]]][lambda.loc[2], ]
         
         # Evaluate the model performance
-        if (model == 4) {
-            sivcm.result <- vector(length = 14)
-            names(sivcm.result) <- c("seed", "sen", "sen.int", "fdr", "fdr.int",
-                                     "card", "card.main", "card.int", "mse", 
-                                     "c-index", "lambda1", "lambda2", "converge", 
-                                     "ic")
-            sel.true <- 1:2
-            sel.int.true <- 1:2
+        sivcm.result <- vector(length = ifelse(model == 2, 12, 15))
+        if (model == 2) {
+            names(sivcm.result) <- c("seed", "sen", "fdr", "card", "card.main",
+                                     "card.int", "mse", "c-index", "lambda1",
+                                     "lambda2", "converge", "ic")
         } else {
-            sivcm.result <- vector(length = ifelse(model == 2, 12, 15))
-            if (model == 1 | model == 3) {
-                names(sivcm.result) <- c("seed", "sen", "sen.int", "fdr", "fdr.int",
-                                         "card", "card.main", "card.int", "aip",
-                                         "mse", "c-index", "lambda1", "lambda2",
-                                         "converge", "ic")
-            } else if (model == 2) {
-                names(sivcm.result) <- c("seed", "sen", "fdr", "card", "card.main",
-                                         "card.int", "mse", "c-index", "lambda1",
-                                         "lambda2", "converge", "ic")
-            }
-            sivcm.result["aip"] <- abs(beta %*% sivcm.beta)
-            sel.true <- 1:20
-            sel.int.true <- 11:20
+            names(sivcm.result) <- c("seed", "sen", "sen.int", "fdr", "fdr.int",
+                                     "card", "card.main", "card.int", "aip",
+                                     "mse", "c-index", "lambda1", "lambda2",
+                                     "converge", "ic")
         }
+        sivcm.result["aip"] <- abs(beta %*% sivcm.beta)
+        sel.true <- 1:20
+        sel.int.true <- 11:20
+            
         nsel.true <- (1:p)[-sel.true]
         nsel.int.true <- (1:p)[-sel.int.true]
         sivcm.result["seed"] <- seed
@@ -491,13 +474,8 @@ for (seed in 1:100) {
                                    "card", "card.main", "card.int", "mse",
                                    "c-index", "lambda")
         }
-        if (model == 4) {
-            sel.true <- 1:2
-            sel.int.true <- 1:2
-        } else {
-            sel.true <- 1:20
-            sel.int.true <- 11:20
-        }
+        sel.true <- 1:20
+        sel.int.true <- 11:20
         nsel.true <- (1:p)[-sel.true]
         nsel.int.true <- (1:p)[-sel.int.true]
         sel.int <- which(apply(int.coef.mat, 1, function(x) any(x != 0)))
