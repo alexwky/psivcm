@@ -16,7 +16,7 @@ The simulation settings considered in the paper are as follows:
 
 
 ## Simulation Data Sets
-The simulation data sets used in the paper are available from https://github.com/alexwky/psivcm and the file `SimulationData.zip` can be found in the directory `Simulation/SimulationData`. The zip file contains the file `Simulation-beta0.csv`, 404 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 1212 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
+The simulation data sets used in the paper are available from the file `SimulationData.zip` in the directory `Simulation/SimulationData`. The zip file contains the file `Simulation-beta0.csv`, 404 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 1212 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
 
 * The file `Simulation-beta0.csv` stores the initial values of single-index parameter that are used for all simulation replicates. Each row in a file contains a set of initial values.
 
