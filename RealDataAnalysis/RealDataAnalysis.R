@@ -22,8 +22,8 @@ if(FALSE) {
         initbeta[seed, ] <- beta0
     }
     write.table(initbeta, 
-                "./RealDataAnalysis/RealDataAnalysisData/RealData-NSCLC-beta0.csv", 
-                row.names = FALSE, col.names = FALSE, sep = ",")    
+                file = "./RealDataAnalysis/RealDataAnalysisData/RealData-NSCLC-beta0.csv", 
+                row.names = FALSE, col.names = FALSE, sep = ",")   
 }
 
 # Import data
@@ -66,6 +66,7 @@ if (weight == TRUE) {
     lambda2.min.ratio <- 0.3
 }
 
+# Proposed method
 for (initbeta in 1:50) {
     
     if (weight == TRUE) {
@@ -111,6 +112,39 @@ for (initbeta in 1:50) {
                     sep = "")), append = T)
 }
 
+res <- as.matrix(read.csv(
+    "./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-NSCLC-weighted.csv",
+    row.names = 1))
+sivcm.parameter <- res[which.min(res[, ncol(res)]), ]
+sivcm.beta <- sivcm.parameter[1:q]
+sivcm.coef <- sivcm.parameter[-(1:q)]
+sivcm.coef <- sivcm.coef[-length(sivcm.coef)]
+
+# Lasso without interaction terms
+if(weight == TRUE){
+    coef0 <- as.matrix(read.csv(
+        "./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-NSCLC-main-unweighted.csv",
+        sep = ","))
+    omega <- 1 / abs(coef0[(1:p) + 1])
+} else {
+    omega <- rep(1, p)
+}
+
+main.fit <- grpreg(cbind(X, U), Y, group = c(1:p, rep(0, q)), family = "gaussian",
+                   lambda = setup.grlambda(cbind(X, U), Y, family = "gaussian",
+                                           group = c(1:p, rep(0, q)), nlambda = nlambda,
+                                           lambda.min.ratio = lambda1.min.ratio,
+                                           penalty.factor = c(omega, 0)),
+                   group.multiplier = omega)
+main.likelihood <- apply(main.fit$beta, 2, function(x)
+    likelihood(Y, colSums(t(cbind(1, X, U)) * x), family = "gaussian"))
+main.tune <- tune.control(family = "gaussian", main.likelihood, n, main.fit$df, tune)
+main.coef <- main.fit$beta[,main.tune$lambda.min]
+write.table(t(main.coef), 
+            paste("./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-NSCLC-main-", 
+                  ifelse(weight == TRUE, "weighted.csv", "unweighted.csv"),
+                  sep = ""), sep = ",", row.names = FALSE)
+
 
 #-------------------------------------------------------------------------------
 #                                 LGG analysis
@@ -126,7 +160,7 @@ if(FALSE) {
         initbeta[seed, ] <- beta0
     }
     write.table(initbeta, 
-                "./RealDataAnalysis/RealDataAnalysisData/RealData-LGG-beta0.csv", 
+                file = "./RealDataAnalysis/RealDataAnalysisData/RealData-LGG-beta0.csv", 
                 row.names = FALSE, col.names = FALSE, sep = ",")
 }
 
@@ -188,6 +222,7 @@ if (weight == TRUE) {
     lambda2.min.ratio <- 0.15
 }
 
+# Proposed method
 for (initbeta in 1:50) {
     
     if (weight == TRUE) {
@@ -232,3 +267,38 @@ for (initbeta in 1:50) {
                     ifelse(weight == TRUE, "weighted.csv", "unweighted.csv"),
                     sep = "")), append = T)
 }
+
+res <- as.matrix(read.csv(
+    "./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-LGG-weighted.csv",
+    row.names = 1))
+sivcm.parameter <- res[which.min(res[, ncol(res)]), ]
+sivcm.beta <- sivcm.parameter[1:q]
+sivcm.coef <- sivcm.parameter[-(1:q)]
+sivcm.coef <- sivcm.coef[-length(sivcm.coef)]
+
+# Lasso without interaction terms
+if(weight == TRUE){
+    coef0 <- as.matrix(read.csv(
+        "./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-LGG-main-unweighted.csv",
+        sep = ","))
+    omega <- 1 / abs(coef0[(1:p)])
+    omega[omega == Inf] <- 1 / 1e-300
+} else {
+    omega <- rep(1, p)
+}
+
+main.fit <- grpsurv(cbind(X, U), Y, group = c(1:p, rep(0, q)), family = "cox",
+                    lambda = setup.grlambda(cbind(X, U), Y, family = "cox",
+                                            group = c(1:p, rep(0, q)), nlambda = nlambda,
+                                            lambda.min.ratio = lambda1.min.ratio,
+                                            penalty.factor = c(omega, 0)),
+                    group.multiplier = omega)
+main.likelihood <- apply(main.fit$beta, 2, function(x)
+    likelihood(Y, colSums(t(cbind(X, U)) * x), family = "cox"))
+main.tune <- tune.control(family = "cox", main.likelihood, sum(Y[,2]), main.fit$df,
+                          tune)
+main.coef <- main.fit$beta[,main.tune$lambda.min]
+write.table(t(main.coef), 
+            paste("./RealDataAnalysis/RealDataAnalysisResults/RealDataAnalysis-LGG-main-", 
+                  ifelse(weight == TRUE, "weighted.csv", "unweighted.csv"),
+                  sep = ""), sep = ",", row.names = FALSE)
