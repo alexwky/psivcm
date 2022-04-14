@@ -265,7 +265,7 @@ for(family in c("gaussian", "cox")){
     }
     
     pdf(paste("./Simulation/SimulationResults/SimulationResults-setting1-", 
-              family, "-p", p, "-coef-review.pdf", sep = ""))
+              family, "-p", p, "-coef.pdf", sep = ""))
     par(oma = c(2, 2, 2, 2), mar = c(2, 2, 2, 2))
     
     m <- matrix(c(1:20, 21, 21, 21, 21), nrow = 6, ncol = 4, byrow = TRUE)
