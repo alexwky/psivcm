@@ -12,19 +12,21 @@ The simulation settings considered in the paper are as follows:
 
 * Setting 3 (`model = 3`): the additional simulation study in Section S3.2 concerning a model with non-linear main effects.
 
-* Setting 4 (`model = 4`): the additional simulation study in Section S3.3 concerning a single-index varying coefficient model where the continuous outcome variable has higher noise than Setting 1.
+* Setting 4 (`model = 4`): the additional simulation study in Section S3.3 concerning a single-index varying coefficient model where the continuous outcome variable has larger noise than Setting 1.
 
 
 ## Simulation Data Sets
-The simulation data sets used in the paper are available from the file `SimulationData.zip` in the directory `Simulation/SimulationData`. The zip file contains the file `Simulation-beta0.csv`, 404 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 1212 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
+Users can simulate the random data by running the program `SimulateData.R` in the directory `Simulation`. It will generate the initial values of single-index parameter and 101 simulation data sets (100 training data sets and a validation data set) for each simulation setting to the directory `Simulation/SimulationData`.
+
+The simulation data sets used in the paper are available, the file `Simulation-beta0.csv` and the zip files (`SimulationData-p20.zip`, `SimulationData-p50.zip`, `SimulationData-p100.zip`, `SimulationData-p300-0-50.zip`, `SimulationData-p300-51-100.zip`, and `AdditionalSimulationData.zip`) can be found in the directory `Simulation/SimulationData`. To reproduce the analyses, download the zip files and copy the files to the directory `Simulation/SimulationData`.
+
+The simulation data consist of the file `Simulation-beta0.csv`, 404 files with names in the form of `SimulationData-p[number of covariates in X]-[replication number].csv`, and 1212 files with names in the form of `AdditionalSimulationData-setting[setting number]-[number of covariates in X]-[replication number].csv`. For details, see the following data documentation:
 
 * The file `Simulation-beta0.csv` stores the initial values of single-index parameter that are used for all simulation replicates. Each row in a file contains a set of initial values.
 
 * Each of the 404 files contains the simulation data for 500 subjects (5000 subjects for `replication number = 0`) for a specific simulation replicate under setting 1. Each row in a file contains data for a subject. The first element on each row is the continuous outcome, the second element and the third element are the right-censored outcome corresponding to the observed time and the event indicator (1 for observed event time and 0 for right-censored time), respectively. The remaining elements are the observed values of X and U. 
 
 * Each of the 1212 files contains the responses for other simulation settings (settings 2 to 4). Each row in a file contains data for a subject. The first element on each row is the continuous outcome, the second element and the third element are the right-censored outcome corresponding to the observed time and the event indicator, respectively.
-
-To reproduce the analyses, download `SimulationData.zip` and copy the files to the directory `Simulation/SimulationData`. Users can instead simulate the random data by running the program `SimulateData.R` in the directory `Simulation`. It will generate the initial values of single-index parameter and 101 simulation data sets (100 training data sets and a validation data set) for each simulation setting to the directory `Simulation/SimulationData`.
 
 
 ## Simulation Studies
@@ -36,7 +38,7 @@ To reproduce all the analyses in the paper, users should follow the comments sta
 
 ## Analysis of TCGA data
 
-We provided two real data examples for the application of the proposed method. The raw data downloaded from [UCSC Xena data hubs](https://xena.ucsc.edu) can be found in the directory `RealDataAnalysis/RealDataAnalysisData`. The zip file `RealDataAnalysis-data.zip` contains the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter for each analysis. Each row in a file contains a set of initial values. (Users can also generate initial values of the single-index parameter by switching `FALSE` in lines 16 and 154 of the program `RealDataAnalysis.R` into `TRUE`. The program will generate the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter to the directory `RealDataAnalysis/RealDataAnalysisData`.)  The zip file `RealDataAnalysis-data.zip` contains all data files required for the real data analyses.
+We provided two real data examples for the application of the proposed method. The raw data downloaded from [UCSC Xena data hubs](https://xena.ucsc.edu) can be found in the directory `RealDataAnalysis/RealDataAnalysisData`. The zip file `RealDataAnalysis-beta0.zip` contains the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter for each analysis. Each row in a file contains a set of initial values. (Users can also generate initial values of the single-index parameter by switching `FALSE` in lines 16 and 154 of the program `RealDataAnalysis.R` into `TRUE`. The program will generate the files `RealData-NSCLC-beta0.csv` and `RealData-LGG-beta0.csv` that store 50 initial values of single-index parameter to the directory `RealDataAnalysis/RealDataAnalysisData`.)  The zip file `RealDataAnalysis-data.zip` contains all data files required for the real data analyses.
 
 Download `RealDataAnalysis-beta0.zip` and `RealDataAnalysis-data.zip`, and copy the files to `RealDataAnalysis/RealDataAnalysisData`. Run the program `DataProcessing.R` to extract relevant data for the analyses. The processed data will be written in the same directory. Run the program `RealDataAnalysis.R` in the directory `RealDataAnalysis`. This program performs analyses on the NSCLC and LGG data sets. For each analysis, the program generates an output file in the directory `RealDataAnalysis/RealDataAnalysisResults`. For the proposed methods, each row in the output file contains the estimated regression parameters under each initial value of the single-index parameter.
 
