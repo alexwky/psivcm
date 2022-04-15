@@ -44,6 +44,7 @@ for(family in c("gaussian", "cox")){
                                            res4.unweighted[, "ic"], 
                                            res5.unweighted[, "ic"]), 
                                      1, which.min)
+    
     for (initbeta in 1:5) {
       assign(paste("res", initbeta, ".weighted", sep = ""), 
              as.matrix(read.csv(paste(
@@ -278,14 +279,14 @@ for(family in c("gaussian", "cox")){
            ylim = ylim, xlim = xlim, main = bquote(italic(g)[.(i)]), 
            lty = 1, type = "l",
            ylab = paste("g", i, "(grid point)", sep = ""),
-           xlab = "grid point", lwd = 2, cex.axis = 0.9)
-      lines(gridpt, average.grid.unweighted[i, ], col = 3, lwd = 2)
-      lines(gridpt, average.grid.weighted[i, ], col = 2, lwd = 2)
+           xlab = "grid point", lwd = 1, cex.axis = 0.9)
+      lines(gridpt, average.grid.unweighted[i, ], col = "green", lwd = 2, lty = 2)
+      lines(gridpt, average.grid.weighted[i, ], col = "red", lwd = 2, lty = 3)
     }
     
     plot(1, type = "n", axes = FALSE, xlab = "", ylab = "")
     legend("top", legend = c("True", "Unweighted", "Weighted"), 
-           col = c("black", "green", "red"), horiz = TRUE, lwd = 2)
+           col = c("black", "green", "red"), horiz = TRUE, lwd = c(1, 2, 2), lty = 1:3)
     
     dev.off()
   }
